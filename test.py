@@ -60,9 +60,21 @@ while True:
 
     res = cv2.bitwise_and(img, img, mask=mask)
     
-    #detected parts will be shown in this window
+    contours, hierarchy = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+    #img = cv2.drawContours(res, contours, -1, color=[0,255,0])
+
+    for cnt in contours:
+        retval = cv2.boundingRect(cnt)
+        x,y,w,h = retval
+        if (w > 150) and (h < 30):
+            cv2.rectangle(res, (x,y), (x+w,y+h), [0,0,255],  thickness=1)
+        elif (h>150) and (w<30):
+            cv2.rectangle(res, (x,y), (x+w,y+h), [0,0,255],  thickness=1)
+    
+    #detected p`arts will be shown in this window
     cv2.imshow('processed', res)
-    cv2.imshow('original', img)
+    #cv2.imshow('original', img)
+    #cv2.imshow('rect', retval)
     cv2.waitKey(1)
 
 cap.release()
